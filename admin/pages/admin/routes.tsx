@@ -8,6 +8,7 @@ import {
   Group,
   Select,
   TextInput,
+  MultiSelect,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { showNotification, updateNotification } from "@mantine/notifications";
@@ -17,6 +18,31 @@ import { addDoc, collection } from "firebase/firestore";
 import React, { useState } from "react";
 import { database } from "../../src/lib";
 
+const places = [
+  "Amborkhana",
+  "Eidgah",
+  "TB GATE",
+  "Tilagor",
+  "Khadim",
+  "Shahporan",
+  "Bondor",
+  "Noyashorok",
+  "Kumarpara",
+  "Naiorpul",
+  "Zindabazar",
+  "Chowhatta",
+  "Rikabibazar",
+  "Taltoala",
+  "Jitu miar point",
+  "Modina Market",
+  "Pathantula",
+  "Shubidbazar",
+  "Akhali ghat",
+  "Varsity gate",
+  "Lakkatura",
+  "Uposhohor",
+  "campus",
+];
 export const routeDbInstance = collection(database, "routes");
 const Routes = () => {
   const queryClient = useQueryClient();
@@ -92,12 +118,12 @@ const FormBox = ({ form, handleSubmit }: any) => {
           {...form.getInputProps("routeNumber")}
           requiered
         />
-        <TextInput
-          withAsterisk
-          label="Route name"
-          placeholder="Route name"
+        <MultiSelect
           {...form.getInputProps("label")}
-          requiered
+          data={places}
+          label="Route"
+          searchable
+          placeholder="Pick all that you like"
         />
         <Select
           label="Start time"
