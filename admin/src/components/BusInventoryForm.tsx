@@ -76,9 +76,6 @@ export default function BusInventoryForm() {
     });
     setOpen(false);
   };
-  useEffect(() => {
-    getNotes();
-  }, []);
 
   return (
     <>
