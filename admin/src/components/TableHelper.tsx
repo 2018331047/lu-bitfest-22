@@ -8,6 +8,7 @@ import {
   Text,
   Button,
   Group,
+  MultiSelect,
 } from "@mantine/core";
 import {
   doc,
@@ -22,6 +23,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { IconCheck, IconEdit, IconTrash } from "@tabler/icons";
 import { showNotification, updateNotification } from "@mantine/notifications";
+import { places } from "../../pages/admin/routes";
 
 const TableHelper = ({ type = "bus-inventory", data }: any) => {
   const queryClient = useQueryClient();
@@ -64,6 +66,39 @@ const TableHelper = ({ type = "bus-inventory", data }: any) => {
       </tr>
     ));
   };
+  const getRoutes = (data: any) => {
+    return data.map((element: any) => (
+      <tr key={element.id}>
+        <td>{element.routeNumber}</td>
+        <td>{element.label.join("-")}</td>
+        <td>{element.startTime}</td>
+        <td>
+          <IconEdit
+            onClick={() => {
+              setSelected(element);
+              setEditing(true);
+            }}
+            style={{
+              cursor: "pointer",
+            }}
+          />
+        </td>
+        <td>
+          <IconTrash
+            onClick={() => {
+              const collectionById = doc(database, type, element.id);
+              deleteDoc(collectionById).then(() => {
+                queryClient.invalidateQueries([type]);
+              });
+            }}
+            style={{
+              cursor: "pointer",
+            }}
+          />
+        </td>
+      </tr>
+    ));
+  };
   const getBusInventoryHeader = () => {
     return (
       <tr>
@@ -78,18 +113,34 @@ const TableHelper = ({ type = "bus-inventory", data }: any) => {
       </tr>
     );
   };
+  const getRoutesHeader = () => {
+    return (
+      <tr>
+        <th>Route number </th>
+        <th>Route name</th>
+        <th>Start time</th>
+
+        <th></th>
+        <th></th>
+      </tr>
+    );
+  };
 
   console.log({ data });
   const getRows = (type: any, data: any) => {
     switch (type) {
       case "bus-inventory":
         return getBusInventory(data);
+      case "routes":
+        return getRoutes(data);
     }
   };
   const getRowsHeader = (type: any) => {
     switch (type) {
       case "bus-inventory":
         return getBusInventoryHeader();
+      case "routes":
+        return getRoutesHeader();
     }
   };
 
@@ -105,7 +156,12 @@ const TableHelper = ({ type = "bus-inventory", data }: any) => {
       </Table>
       <Modal opened={editing} onClose={() => setEditing(false)} title="Add Bus">
         {/* Modal content */}
-        <FormBox data={selected} setSelected={setSelected} type={type} />
+        {type === "bus-inventory" && (
+          <BusForm data={selected} setSelected={setSelected} type={type} />
+        )}
+        {type === "routes" && (
+          <RouteForm data={selected} setSelected={setSelected} type={type} />
+        )}
       </Modal>
     </>
   );
@@ -113,7 +169,7 @@ const TableHelper = ({ type = "bus-inventory", data }: any) => {
 
 export default TableHelper;
 
-const FormBox = ({ data, setSelected, type }: any) => {
+const BusForm = ({ data, setSelected, type }: any) => {
   const queryClient = useQueryClient();
   const [state, setState] = useState(data);
 
@@ -222,6 +278,86 @@ const FormBox = ({ data, setSelected, type }: any) => {
           setSelected((prev: any) => ({
             ...prev,
             contactNumber: e.currentTarget?.value,
+          }));
+        }}
+      />
+
+      <Group position="right" mt="md">
+        <Button onClick={handleSubmit}>Submit</Button>
+      </Group>
+    </Box>
+  );
+};
+
+const RouteForm = ({ data, setSelected, type }: any) => {
+  const queryClient = useQueryClient();
+  const [state, setState] = useState(data);
+
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    console.log({ data });
+    const collectionById = doc(database, type, data.id);
+    showNotification({
+      id: "editing-routes",
+      loading: true,
+      title: "Editing...",
+      message: "Please wait",
+      autoClose: false,
+      disallowClose: true,
+    });
+
+    updateDoc(collectionById, {
+      routeNumber: data.routeNumber,
+      label: data.label,
+      startTime: data.startTime,
+    }).then(() => {
+      queryClient.invalidateQueries([type]);
+      updateNotification({
+        id: "editing-routes",
+        color: "teal",
+        title: "Bus was added",
+        message: "Data was added",
+        icon: <IconCheck />,
+        autoClose: 2000,
+      });
+    });
+  };
+  return (
+    <Box sx={{ maxWidth: 300 }} mx="auto">
+      <TextInput
+        withAsterisk
+        label="Route number"
+        placeholder="Route number"
+        value={data.routeNumber}
+        onChange={(e) => {
+          setSelected((prev: any) => ({
+            ...prev,
+            routeNumber: e.currentTarget?.value,
+          }));
+        }}
+      />
+      <MultiSelect
+        value={data.label}
+        onChange={(val) => {
+          setSelected((prev: any) => ({
+            ...prev,
+            label: val,
+          }));
+        }}
+        data={places}
+        label="Route"
+        searchable
+        placeholder="Pick "
+      />
+      <TextInput
+        withAsterisk
+        label="start time"
+        placeholder="start time"
+        value={data.startTime}
+        onChange={(e) => {
+          setSelected((prev: any) => ({
+            ...prev,
+            capacity: e.currentTarget?.value,
           }));
         }}
       />

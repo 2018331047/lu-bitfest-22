@@ -13,12 +13,13 @@ import {
 import { useForm } from "@mantine/form";
 import { showNotification, updateNotification } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons";
-import { useQueryClient } from "@tanstack/react-query";
-import { addDoc, collection } from "firebase/firestore";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { addDoc, collection, getDocs } from "firebase/firestore";
 import React, { useState } from "react";
+import TableHelper from "../../src/components/TableHelper";
 import { database } from "../../src/lib";
 
-const places = [
+export const places = [
   "Amborkhana",
   "Eidgah",
   "TB GATE",
@@ -44,7 +45,18 @@ const places = [
   "campus",
 ];
 export const routeDbInstance = collection(database, "routes");
+const getNotes = () => {
+  return getDocs(routeDbInstance).then((data) => {
+    const dt = data.docs.map((item) => {
+      return { ...item.data(), id: item.id };
+    });
+    return dt;
+  });
+};
 const Routes = () => {
+  const { data, isLoading, isError } = useQuery(["routes"], getNotes);
+  console.log({ data });
+
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const form = useForm({
@@ -101,6 +113,7 @@ const Routes = () => {
         {/* Modal content */}
         <FormBox form={form} handleSubmit={handleSubmit} />
       </Modal>
+      {data && <TableHelper type="routes" data={data} />}
     </>
   );
 };
