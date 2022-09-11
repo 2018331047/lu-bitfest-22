@@ -1,5 +1,6 @@
 import 'package:consumer/screens/initscreens/login.dart';
 import 'package:consumer/screens/initscreens/signup.dart';
+import 'package:consumer/screens/tabs/tabscreen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const Login(),
+      home: const TabScreen(),
     );
   }
 }
