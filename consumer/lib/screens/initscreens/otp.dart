@@ -8,11 +8,15 @@ import 'package:fluttertoast/fluttertoast.dart';
 //verification of an user by sending otp
 class OTP extends StatelessWidget {
   final String email;
-  String name;
+  final String userName;
+  String id;
+  final String phone;
+  final String stoppage;
   final String pass;
   bool check;
   //get these infos from signup page
-  OTP(this.email, this.pass, this.check, this.name);
+  OTP(this.userName, this.id, this.email, this.pass, this.phone, this.stoppage,
+      this.check);
 
   final _auth = FirebaseAuth.instance;
   TextEditingController otpInput = TextEditingController();
@@ -54,7 +58,8 @@ class OTP extends StatelessWidget {
                     print(res);
                     //if res is true signup constructor called else signup failed
                     if (res == true) {
-                      signUp(email, pass, context);
+                      signUp(userName, id, email, pass, phone, stoppage, check,
+                          context);
                     } else {
                       print('false');
                     }
@@ -92,10 +97,11 @@ class OTP extends StatelessWidget {
   }
 
 // method to sign a user up
-  void signUp(String email, String password, context) async {
+  void signUp(String userName, String id, String email, String pass,
+      String phone, String stoppage, bool check, context) async {
     try {
       await _auth
-          .createUserWithEmailAndPassword(email: email, password: password)
+          .createUserWithEmailAndPassword(email: email, password: pass)
           .then((value) => {
                 // check variable keeps the track of the type of an user
                 //if the var is false that indicates the user is a student
@@ -103,12 +109,28 @@ class OTP extends StatelessWidget {
                 if (check == false)
                   {
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => const UpdateTeaInfo())),
+                        builder: (context) => UpdateTeaInfo(
+                              userName,
+                              id,
+                              email,
+                              pass,
+                              phone,
+                              stoppage,
+                              check,
+                            ))),
                   }
                 else
                   {
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => const UpdateStuInfo())),
+                        builder: (context) => UpdateStuInfo(
+                              userName,
+                              id,
+                              email,
+                              pass,
+                              phone,
+                              stoppage,
+                              check,
+                            ))),
                   }
               })
           .catchError((e) {
