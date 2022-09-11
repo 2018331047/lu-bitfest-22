@@ -19,6 +19,22 @@ import React, { useState } from "react";
 import TableHelper from "../../src/components/TableHelper";
 import { database } from "../../src/lib";
 
+export const times = [
+  "7 am",
+  "8 am",
+  "9 am",
+  "10 am",
+  "11 am",
+  "12 pm",
+  "1 pm",
+  "2 pm",
+  "3 pm",
+  "4 pm",
+  "5 pm",
+  "6 pm",
+  "7 pm",
+  "8 pm",
+];
 export const places = [
   "Amborkhana",
   "Eidgah",
@@ -45,7 +61,7 @@ export const places = [
   "campus",
 ];
 export const routeDbInstance = collection(database, "routes");
-const getNotes = () => {
+export const getRoutes = () => {
   return getDocs(routeDbInstance).then((data) => {
     const dt = data.docs.map((item) => {
       return { ...item.data(), id: item.id };
@@ -54,7 +70,7 @@ const getNotes = () => {
   });
 };
 const Routes = () => {
-  const { data, isLoading, isError } = useQuery(["routes"], getNotes);
+  const { data, isLoading, isError } = useQuery(["routes"], getRoutes);
   console.log({ data });
 
   const queryClient = useQueryClient();
@@ -141,22 +157,7 @@ const FormBox = ({ form, handleSubmit }: any) => {
         <Select
           label="Start time"
           placeholder="Pick time"
-          data={[
-            "7 am",
-            "8 am",
-            "9 am",
-            "10 am",
-            "11 am",
-            "12 pm",
-            "1 pm",
-            "2 pm",
-            "3 pm",
-            "4 pm",
-            "5 pm",
-            "6 pm",
-            "7 pm",
-            "8 pm",
-          ]}
+          data={times}
           {...form.getInputProps("startTime")}
         />
         <Group position="right" mt="md">
