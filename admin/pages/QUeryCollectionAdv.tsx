@@ -12,20 +12,20 @@ function QUeryCollectionAdv() {
             <QueryCard
               hoverable
               src="./images/bus.png"
-              text="Add Or Edit Bus Info"
+              text="Bus Inventory"
               onClick="console.log('The link was clicked.')"
               path="/admin/bus-inventory"
             />
 
             <QueryCard
               src="images/route.jpg "
-              text="Add Or Edit Route Info"
+              text="Routes"
               path="/admin/routes"
             />
 
             <QueryCard
               src="images/buss.jpg"
-              text="Add Or Edit demand Info"
+              text="Transport demand"
               //  label = "Click Here"
               path="/admin/transport-demand"
             />
