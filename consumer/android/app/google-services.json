@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "235467325200",
+    "project_id": "bus-management-f5706",
+    "storage_bucket": "bus-management-f5706.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:235467325200:android:b34bdc6ff853436b936f95",
+        "android_client_info": {
+          "package_name": "com.example.consumer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "235467325200-8tnlo9cjrhblm1b5q0tpkm5o39g73sr6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2pteSM-xw-23pze3hr_yT9c_ZciMwDKo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "235467325200-8tnlo9cjrhblm1b5q0tpkm5o39g73sr6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
