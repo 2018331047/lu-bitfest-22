@@ -1,3 +1,5 @@
+import 'package:consumer/screens/initscreens/updateTea.dart';
+import 'package:consumer/screens/tabs/tabscreen.dart';
 import 'package:flutter/material.dart';
 
 import '../../widgets/loginButton/deco.dart';
@@ -82,7 +84,7 @@ class _UpdateStuInfoState extends State<UpdateStuInfo> {
                       TextFormField(
                         autofocus: false,
                         controller: sectionController,
-                        keyboardType: TextInputType.number,
+                        keyboardType: TextInputType.text,
                         onSaved: (value) {
                           sectionController.text = value!;
                         },
@@ -102,7 +104,11 @@ class _UpdateStuInfoState extends State<UpdateStuInfo> {
                             EdgeInsets.symmetric(horizontal: 1, vertical: 30),
                         child: MaterialButton(
                           textColor: Colors.white,
-                          onPressed: () async {},
+                          onPressed: () {
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) => const TabScreen()));
+                          },
                           padding: const EdgeInsets.all(0),
                           child: Deco('SAVE'),
                         ),

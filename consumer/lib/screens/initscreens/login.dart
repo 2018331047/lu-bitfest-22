@@ -1,11 +1,14 @@
 import 'package:consumer/screens/initscreens/signup.dart';
+import 'package:consumer/screens/tabs/tabscreen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../widgets/loginButton/deco.dart';
 import '../../widgets/loginScreenTitle/titleOne.dart';
 import '../../widgets/loginScreenTitle/titleThree.dart';
 import '../../widgets/loginScreenTitle/titleTwo.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -16,8 +19,23 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController emailController = new TextEditingController();
+  String? errorMessage;
+  final TextEditingController userNameController = new TextEditingController();
   final TextEditingController passwordController = new TextEditingController();
+
+  Future<void> getName(id) async {
+    late DocumentSnapshot docu;
+
+//checking if the user is student
+    await FirebaseFirestore.instance
+        .collection('USERS')
+        .doc(id)
+        .get()
+        .then((value) {
+      docu = value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -52,7 +70,7 @@ class _LoginState extends State<Login> {
                     children: [
                       TextFormField(
                         autofocus: false,
-                        controller: emailController,
+                        controller: userNameController,
                         keyboardType: TextInputType.text,
                         validator: (value) {
                           if (value!.isEmpty) {
@@ -65,25 +83,26 @@ class _LoginState extends State<Login> {
                           return null;
                         },
                         onSaved: (value) {
-                          emailController.text = value!;
+                          userNameController.text = value!;
                         },
                         textInputAction: TextInputAction.next,
                         decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.mail),
-                          contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+                          prefixIcon: const Icon(Icons.mail),
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(20, 15, 20, 15),
                           hintText: "User Name",
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
                         ),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       TextFormField(
                         autofocus: false,
                         controller: passwordController,
                         obscureText: true,
                         validator: (value) {
-                          RegExp regex = new RegExp(r'^.{6,}$');
+                          RegExp regex = RegExp(r'^.{6,}$');
                           if (value!.isEmpty) {
                             return ("Password is required for login");
                           }
@@ -96,8 +115,9 @@ class _LoginState extends State<Login> {
                         },
                         textInputAction: TextInputAction.done,
                         decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.vpn_key),
-                          contentPadding: EdgeInsets.fromLTRB(20, 15, 20, 15),
+                          prefixIcon: const Icon(Icons.vpn_key),
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(20, 15, 20, 15),
                           hintText: "Password",
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10),
@@ -128,7 +148,10 @@ class _LoginState extends State<Login> {
                             horizontal: 1, vertical: 30),
                         child: MaterialButton(
                           textColor: Colors.white,
-                          onPressed: () async {},
+                          onPressed: () async {
+                            signIn(userNameController.text,
+                                passwordController.text);
+                          },
                           padding: const EdgeInsets.all(0),
                           child: Deco('LOGIN'),
                         ),
@@ -176,5 +199,46 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+
+  void signIn(String email, String password) async {
+    final _auth = FirebaseAuth.instance;
+    if (_formKey.currentState!.validate()) {
+      try {
+        await _auth
+            .signInWithEmailAndPassword(email: email, password: password)
+            .then((uid) => {
+                  Fluttertoast.showToast(msg: "Login Successful"),
+                  getName(uid),
+                });
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const TabScreen()));
+      } on FirebaseAuthException catch (error) {
+        switch (error.code) {
+          case "invalid-email":
+            errorMessage = "Your email address appears to be malformed.";
+            break;
+          case "wrong-password":
+            errorMessage = "Your password is wrong.";
+            break;
+          case "user-not-found":
+            errorMessage = "User with this email doesn't exist.";
+            break;
+          case "user-disabled":
+            errorMessage = "User with this email has been disabled.";
+            break;
+          case "too-many-requests":
+            errorMessage = "Too many requests";
+            break;
+          case "operation-not-allowed":
+            errorMessage = "Signing in with Email and Password is not enabled.";
+            break;
+          default:
+            errorMessage = "An undefined Error happened.";
+        }
+        Fluttertoast.showToast(msg: errorMessage!);
+        print(error.code);
+      }
+    }
   }
 }

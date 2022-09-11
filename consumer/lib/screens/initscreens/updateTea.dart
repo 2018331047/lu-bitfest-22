@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../widgets/loginButton/deco.dart';
 import '../../widgets/loginScreenTitle/titleFour.dart';
+import '../tabs/tabscreen.dart';
 
 class UpdateTeaInfo extends StatefulWidget {
   const UpdateTeaInfo({Key? key}) : super(key: key);
@@ -172,7 +173,11 @@ class _UpdateTeaInfoState extends State<UpdateTeaInfo> {
                             EdgeInsets.symmetric(horizontal: 1, vertical: 30),
                         child: MaterialButton(
                           textColor: Colors.white,
-                          onPressed: () async {},
+                          onPressed: () {
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) => const TabScreen()));
+                          },
                           padding: const EdgeInsets.all(0),
                           child: Deco('SAVE'),
                         ),
