@@ -14,28 +14,28 @@ function QUeryCollectionAdv() {
           <div className='cards__wrapper'>
             <ul className='cards__items'>
                
-             
+          
               <QueryCard hoverable
                 src='./images/bus.png'
-                text = 'Add Or Edit Bus Info'
+                text = 'Bus Inventory'
                 onClick="console.log('The link was clicked.')"
                 path ='/page'
                 />
               
               <QueryCard src='images/route.jpg '
-                text = "Add Or Edit Route Info"
+                text = "Create/Update Routes"
                 path='/page'
                 />
                 
                
               <QueryCard src='images/buss.jpg'
-                text = "Add Or Edit demand Info"
+                text = "Input Transport DemandS"
                 //  label = "Click Here"
                  path='/page'
                 /> 
 
             
-                
+
             </ul>
           </div>
         </div>
