@@ -1,3 +1,4 @@
+import 'package:consumer/screens/initscreens/login.dart';
 import 'package:consumer/screens/initscreens/signup.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const SignUp(),
+      home: const Login(),
     );
   }
 }
