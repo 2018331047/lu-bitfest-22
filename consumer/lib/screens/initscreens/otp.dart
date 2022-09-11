@@ -103,12 +103,12 @@ class OTP extends StatelessWidget {
                 if (check == false)
                   {
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => const UpdateStuInfo())),
+                        builder: (context) => const UpdateTeaInfo())),
                   }
                 else
                   {
                     Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => const UpdateTeaInfo())),
+                        builder: (context) => const UpdateStuInfo())),
                   }
               })
           .catchError((e) {
