@@ -31,7 +31,7 @@ class _SignUpState extends State<SignUp> {
   String? errorMessage;
 
   final _formKey = GlobalKey<FormState>();
-  final userNameEditingController = new TextEditingController();
+  final userNameEditingController = TextEditingController();
   final stoppageEditingController = new TextEditingController();
   final fullNameEditingController = new TextEditingController();
   //late final String name;
@@ -40,6 +40,38 @@ class _SignUpState extends State<SignUp> {
   final phoneEditingController = new TextEditingController();
   final idEditingController = new TextEditingController();
   final confirmPasswordEditingController = new TextEditingController();
+  List<DropdownMenuItem<String>> get dropdownItems {
+    List<DropdownMenuItem<String>> menuItems = [
+      DropdownMenuItem(child: Text("Amborkhana"), value: "Amborkhana"),
+      DropdownMenuItem(child: Text("Eidgah"), value: "Eidgah"),
+      DropdownMenuItem(child: Text("TB Gate"), value: "TB Gate"),
+      DropdownMenuItem(child: Text("Tilagor"), value: "Tilagor"),
+      DropdownMenuItem(child: Text("Khadim"), value: "Khadim"),
+      DropdownMenuItem(child: Text("Shahporan"), value: "Shahporan"),
+      DropdownMenuItem(child: Text("Bondor"), value: "Bondor"),
+      DropdownMenuItem(child: Text("Noyashorok"), value: "Noyashorok"),
+      DropdownMenuItem(child: Text("Kumarpara"), value: "Kumarpara"),
+      DropdownMenuItem(child: Text("Naiorpul"), value: "Naiorpul"),
+      DropdownMenuItem(child: Text("Zindabazar"), value: "Zindabazar"),
+      DropdownMenuItem(child: Text("Chowhatta"), value: "Chowhatta"),
+      DropdownMenuItem(child: Text("Rikabibazar"), value: "Rikabibazar"),
+      DropdownMenuItem(child: Text("Taltola"), value: "Taltola"),
+      DropdownMenuItem(
+          child: Text("Jitu miar point"), value: "Jitu miar point"),
+      DropdownMenuItem(child: Text("Modina Market"), value: "Modina Market"),
+      DropdownMenuItem(child: Text("Pathantula"), value: "Pathantula"),
+      DropdownMenuItem(child: Text("Shubidbazar"), value: "Shubidbazar"),
+      DropdownMenuItem(child: Text("Akhali ghat"), value: "Akhali ghat"),
+      DropdownMenuItem(child: Text("SUST gate"), value: "SUST gate"),
+      DropdownMenuItem(child: Text("Lakkatura"), value: "Lakkatura"),
+      DropdownMenuItem(child: Text("Uposhohor"), value: "Uposhohor"),
+      DropdownMenuItem(child: Text("Campus"), value: "Campus"),
+    ];
+    return menuItems;
+  }
+
+  String? selectedStop;
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -200,33 +232,34 @@ class _SignUpState extends State<SignUp> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      TextFormField(
-                        autofocus: false,
-                        controller: stoppageEditingController,
-                        // obscureText: true,
-                        validator: (value) {
-                          RegExp regex = RegExp(r'^.{6,}$');
-                          if (value!.isEmpty) {
-                            return ("Please Enter Your Stoppage");
-                          }
-                          if (!regex.hasMatch(value)) {
-                            return ("Enter Valid Stoppage(Min. 6 Character)");
-                          }
-                        },
-                        onSaved: (value) {
-                          stoppageEditingController.text = value!;
-                        },
-                        textInputAction: TextInputAction.next,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.place),
-                          contentPadding:
-                              const EdgeInsets.fromLTRB(20, 15, 20, 15),
-                          hintText: "Pickup Stoppage",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
+                      DropdownButtonFormField<String>(
+                          autofocus: false,
+                          decoration: InputDecoration(
+                            hintText: 'Pick-up Point',
+                            prefixIcon: Icon(Icons.place),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.grey, width: 1),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.grey, width: 1),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            filled: true,
+                            fillColor: Colors.grey[200],
                           ),
-                        ),
-                      ),
+                          validator: (value) =>
+                              value == null ? "Select Stoppage" : null,
+                          dropdownColor: Colors.grey[200],
+                          value: selectedStop,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedStop = newValue!;
+                            });
+                          },
+                          items: dropdownItems),
                       SizedBox(height: 20),
                       TextFormField(
                           autofocus: false,
@@ -259,10 +292,13 @@ class _SignUpState extends State<SignUp> {
                                 Fluttertoast.showToast(msg: err);
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => OTP(
+                                          userNameEditingController.text,
+                                          idEditingController.text,
                                           emailEditingController.text,
                                           passwordEditingController.text,
+                                          phoneEditingController.text,
+                                          selectedStop!,
                                           check,
-                                          fullNameEditingController.text,
                                         )));
                               }
                             },
@@ -281,10 +317,13 @@ class _SignUpState extends State<SignUp> {
                                 Fluttertoast.showToast(msg: err);
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => OTP(
+                                          userNameEditingController.text,
+                                          idEditingController.text,
                                           emailEditingController.text,
                                           passwordEditingController.text,
+                                          phoneEditingController.text,
+                                          stoppageEditingController.text,
                                           check,
-                                          fullNameEditingController.text,
                                         )));
                               }
                             },
