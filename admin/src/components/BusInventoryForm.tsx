@@ -20,6 +20,14 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import TableHelper from "./TableHelper";
 
 export const busInventoryDbInstance = collection(database, "bus-inventory");
+export const getBuses = () => {
+  return getDocs(busInventoryDbInstance).then((data) => {
+    const dt = data.docs.map((item) => {
+      return { ...item.data(), id: item.id };
+    });
+    return dt;
+  });
+};
 export default function BusInventoryForm() {
   const form = useForm({
     initialValues: {
@@ -33,18 +41,10 @@ export default function BusInventoryForm() {
 
     validate: {},
   });
-  const getNotes = () => {
-    return getDocs(busInventoryDbInstance).then((data) => {
-      const dt = data.docs.map((item) => {
-        return { ...item.data(), id: item.id };
-      });
-      return dt;
-    });
-  };
 
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
-  const { data, isLoading, isError } = useQuery(["bus-inventory"], getNotes);
+  const { data, isLoading, isError } = useQuery(["bus-inventory"], getBuses);
   console.log({ data });
 
   const handleSubmit = (val: any) => {
@@ -76,9 +76,6 @@ export default function BusInventoryForm() {
     });
     setOpen(false);
   };
-  useEffect(() => {
-    getNotes();
-  }, []);
 
   return (
     <>
