@@ -134,7 +134,7 @@ table {
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
 thead tr {
-  background-color: #0ca678;
+  background-color: #1d7ed7;
   font-weight: bold;
   font-size: 1.2rem;
   text-align: left;
@@ -156,5 +156,5 @@ tbody tr:last-of-type {
   border-bottom: 2px solid #0ca678;
 }
 tbody tr:hover {
-  color: #0ca678;
+  color: #1d7ed7;
 }

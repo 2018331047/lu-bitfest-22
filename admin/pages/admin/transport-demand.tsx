@@ -3,16 +3,16 @@ import {
   Group,
   Header,
   Modal,
-  MultiSelect,
-  NumberInput,
   Select,
+  Table,
   Text,
 } from "@mantine/core";
 import { showNotification, updateNotification } from "@mantine/notifications";
+import { Autocomplete, TextField } from "@mui/material";
 import { IconCheck } from "@tabler/icons";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { addDoc, collection, getDocs } from "firebase/firestore";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getBuses } from "../../src/components/BusInventoryForm";
 import { database } from "../../src/lib";
 import { getRoutes, times } from "./routes";
@@ -30,10 +30,10 @@ export const getAllocations = () => {
   });
 };
 const TransportDemand = () => {
-  const [route, setRoute] = useState<string | null>(null);
+  const [route, setRoute] = useState();
   const [time, setTime] = useState<string | null>(null);
 
-  const [bus, setBus] = useState<string | null>(null);
+  const [bus, setBus] = useState([]);
 
   const [type, setType] = useState<string | null>(null);
 
@@ -41,8 +41,22 @@ const TransportDemand = () => {
   const { data: buses } = useQuery(["bus-inventory"], getBuses);
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
+  const [structuredData, setStructuedData] = useState([]);
   const { data } = useQuery(["transportAllocation"], getAllocations);
   console.log({ data });
+  console.log({ structuredData });
+
+  useEffect(() => {
+    const dt = data?.map((dt) => {
+      return {
+        routeLabel: dt.route.label.join("-"),
+        buses: dt.bus.map((b) => b.codeName).join(","),
+        time: dt.time,
+        user_type: dt.type,
+      };
+    });
+    setStructuedData(dt);
+  }, [data]);
 
   const handleSubmit = (val: any) => {
     showNotification({
@@ -84,10 +98,11 @@ const TransportDemand = () => {
           size="xl"
           weight={700}
         >
-          Routes
+          Transport Demand Allocation
         </Text>
         <Button onClick={() => setOpen(true)}>Allocate Transport</Button>
       </Header>
+      {structuredData && <Helper data={structuredData} />}
       <Modal
         opened={open}
         onClose={() => setOpen(false)}
@@ -100,29 +115,47 @@ const TransportDemand = () => {
           placeholder="Pick timeslot"
           data={times}
         />
-        <Select
+        <Autocomplete
           value={route}
-          onChange={setRoute}
-          label="Select route"
-          placeholder="Pick Route"
-          data={routes
-            ?.map((r) => ({
-              value: r.id,
-              label: r.label.join("-"),
-              time: r.startTime,
-            }))
-            .filter((f) => f.time === time)}
+          onChange={(event: any, newValue: string | null) => {
+            setRoute(newValue);
+          }}
+          id="controllable-states-demo"
+          options={routes?.filter((r) => r.startTime === time)}
+          getOptionLabel={(option) => option.label?.join("-")}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              variant="standard"
+              label="Pick route"
+              placeholder="Favorites"
+            />
+          )}
+          disableClearable
+          style={{
+            width: "100%",
+            marginTop: "2px",
+          }}
         />
 
-        <MultiSelect
+        <Autocomplete
+          multiple
           value={bus}
-          onChange={setBus}
-          label="Allocate bus"
-          placeholder="Bus"
-          data={buses?.map((r) => ({
-            value: r.id,
-            label: r.codeName,
-          }))}
+          onChange={(event, newValue) => {
+            setBus(newValue);
+          }}
+          on
+          id="tags-standard"
+          options={buses}
+          getOptionLabel={(option) => option.codeName}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              variant="standard"
+              label="Select bus(es)"
+              placeholder="Favorites"
+            />
+          )}
         />
         <Select
           value={type}
@@ -141,3 +174,33 @@ const TransportDemand = () => {
 };
 
 export default TransportDemand;
+
+const Helper = ({ data }: any) => {
+  const getData = (data: any) => {
+    return data.map((element: any, ind: Number) => (
+      <tr key={ind}>
+        <td>{element.routeLabel}</td>
+        <td>{element.buses}</td>
+        <td>{element.time}</td>
+        <td>{element.user_type}</td>
+      </tr>
+    ));
+  };
+  const getHeader = () => {
+    return (
+      <tr>
+        <th>Route Label</th>
+        <th>{"Allocated bus(es)"}</th>
+        <th>time</th>
+        <th>user type</th>
+      </tr>
+    );
+  };
+
+  return (
+    <Table horizontalSpacing="xl" verticalSpacing="xl" fontSize="lg">
+      <thead>{getHeader()}</thead>
+      <tbody>{getData(data)}</tbody>
+    </Table>
+  );
+};
