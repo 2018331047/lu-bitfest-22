@@ -29,6 +29,13 @@ function QUeryCollectionAdv() {
               //  label = "Click Here"
               path="/admin/transport-demand"
             />
+
+            <QueryCard
+              src="images/sug.png"
+              text="Optimal Suggestion"
+              //  label = "Click Here"
+              path="/admin/suggestion"
+            />
           </ul>
         </div>
       </div>
