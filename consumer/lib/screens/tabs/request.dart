@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -49,6 +50,12 @@ class _RequestState extends State<Request> {
       DropdownMenuItem(child: Text("Campus"), value: "Campus"),
     ];
     return menuItems;
+  }
+
+  late String t;
+  void func(String vr) {
+    t = vr;
+    return;
   }
 
   String? selectedStop;
@@ -182,6 +189,17 @@ class _RequestState extends State<Request> {
                 textColor: Colors.white,
                 onPressed: () async {
                   print(dateinput.text);
+                  final _auth = FirebaseAuth.instance;
+                  final User user = _auth.currentUser!;
+                  late String type;
+                  FirebaseFirestore.instance
+                      .collection('user')
+                      .doc(user.uid)
+                      .get()
+                      .then((value) {
+                    func(value['user type']);
+                  });
+                  print(t);
                   bool flag = false;
                   FirebaseFirestore.instance
                       .collection('transportAllocation')
@@ -192,7 +210,8 @@ class _RequestState extends State<Request> {
                         print(doc['time']);
                         flag = true;
                         Fluttertoast.showToast(msg: "Request Accepted");
-                        AddRequest(dateinput.text, time.text, selectedStop!)
+                        AddRequest(dateinput.text, timeinput.text,
+                                selectedStop!, t)
                             .addRequest();
                         return;
                       }
