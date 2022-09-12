@@ -153,8 +153,11 @@ tbody tr:nth-of-type(even) {
 }
 
 tbody tr:last-of-type {
-  border-bottom: 2px solid #0ca678;
+  border-bottom: 2px solid #1d7ed7;
 }
 tbody tr:hover {
   color: #1d7ed7;
+}
+th {
+  color: white !important;
 }

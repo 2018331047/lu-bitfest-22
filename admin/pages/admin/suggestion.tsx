@@ -52,7 +52,7 @@ const Suggestion = () => {
     return (
       <tr>
         <th>Pick-up point and time</th>
-        <th>count</th>
+        <th>Estimated passengers</th>
       </tr>
     );
   };
