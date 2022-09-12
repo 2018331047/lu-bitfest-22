@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
 
+import '../../databaseServices/addTeacher.dart';
 import '../../widgets/loginButton/deco.dart';
 import '../../widgets/loginScreenTitle/titleFour.dart';
+import '../tabs/tabscreen.dart';
 
 class UpdateTeaInfo extends StatefulWidget {
-  const UpdateTeaInfo({Key? key}) : super(key: key);
-
+  String userName;
+  String id;
+  String email;
+  String pass;
+  String phone;
+  String stoppage;
+  UpdateTeaInfo(this.userName, this.id, this.email, this.pass, this.phone,
+      this.stoppage, bool check,
+      {Key? key})
+      : super(key: key);
   @override
   State<UpdateTeaInfo> createState() => _UpdateTeaInfoState();
 }
@@ -172,7 +182,19 @@ class _UpdateTeaInfoState extends State<UpdateTeaInfo> {
                             EdgeInsets.symmetric(horizontal: 1, vertical: 30),
                         child: MaterialButton(
                           textColor: Colors.white,
-                          onPressed: () async {},
+                          onPressed: () {
+                            postDetailsToFirestore(
+                                widget.userName,
+                                nameController.text,
+                                widget.id,
+                                widget.email,
+                                widget.pass,
+                                widget.phone,
+                                widget.stoppage,
+                                codeController.text,
+                                selectedDept,
+                                selectedDesignation);
+                          },
                           padding: const EdgeInsets.all(0),
                           child: Deco('SAVE'),
                         ),
@@ -186,5 +208,32 @@ class _UpdateTeaInfoState extends State<UpdateTeaInfo> {
         ),
       ),
     );
+  }
+
+  postDetailsToFirestore(
+      String userName,
+      String fullName,
+      String id,
+      String email,
+      String pass,
+      String phone,
+      String stoppage,
+      String codeName,
+      String? selectedDept,
+      String? selectedDesignation) async {
+    AddTeacher(
+      userName,
+      nameController.text,
+      id,
+      email,
+      phone,
+      stoppage,
+      codeName,
+      selectedDept!,
+      selectedDesignation!,
+    ).addTeacher();
+
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const TabScreen()));
   }
 }

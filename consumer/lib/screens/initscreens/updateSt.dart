@@ -1,10 +1,25 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:consumer/databaseServices/addStudent.dart';
+import 'package:consumer/screens/initscreens/updateTea.dart';
+import 'package:consumer/screens/tabs/tabscreen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../widgets/loginButton/deco.dart';
 import '../../widgets/loginScreenTitle/titleFour.dart';
 
 class UpdateStuInfo extends StatefulWidget {
-  const UpdateStuInfo({Key? key}) : super(key: key);
+  String userName;
+  String id;
+  String email;
+  String pass;
+  String phone;
+  String stoppage;
+  UpdateStuInfo(this.userName, this.id, this.email, this.pass, this.phone,
+      this.stoppage, bool check,
+      {Key? key})
+      : super(key: key);
 
   @override
   State<UpdateStuInfo> createState() => _UpdateStuInfoState();
@@ -16,6 +31,22 @@ class _UpdateStuInfoState extends State<UpdateStuInfo> {
   final TextEditingController sectionController = new TextEditingController();
   final TextEditingController batchController = new TextEditingController();
   final TextEditingController phoneController = new TextEditingController();
+  final TextEditingController deptController = new TextEditingController();
+
+  List<DropdownMenuItem<String>> get dropdownItems {
+    List<DropdownMenuItem<String>> menuItems = [
+      DropdownMenuItem(child: Text("CSE"), value: "CSE"),
+      DropdownMenuItem(child: Text("EEE"), value: "EEE"),
+      DropdownMenuItem(child: Text("CIVIL"), value: "CIVIL"),
+      DropdownMenuItem(child: Text("BBA"), value: "BBA"),
+      DropdownMenuItem(child: Text("ENGLISH"), value: "ENGLISH"),
+      DropdownMenuItem(child: Text("LAW"), value: "LAW"),
+      DropdownMenuItem(child: Text("ARCHITECTURE"), value: "ARCHITECTURE"),
+    ];
+    return menuItems;
+  }
+
+  String? selectedDept;
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -61,6 +92,36 @@ class _UpdateStuInfoState extends State<UpdateStuInfo> {
                         ),
                       ),
                       SizedBox(height: 20),
+                      DropdownButtonFormField<String>(
+                          decoration: InputDecoration(
+                            //icon: Icon(Icons.school),
+                            hintText: 'Department',
+                            prefixIcon: Icon(Icons.school),
+                            //icon: Icon(Icons.school),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.grey, width: 1),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.grey, width: 1),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            filled: true,
+                            fillColor: Colors.grey[200],
+                          ),
+                          validator: (value) =>
+                              value == null ? "Select Department" : null,
+                          dropdownColor: Colors.grey[200],
+                          value: selectedDept,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              selectedDept = newValue!;
+                            });
+                          },
+                          items: dropdownItems),
+                      const SizedBox(height: 20),
                       TextFormField(
                         autofocus: false,
                         controller: batchController,
@@ -82,7 +143,7 @@ class _UpdateStuInfoState extends State<UpdateStuInfo> {
                       TextFormField(
                         autofocus: false,
                         controller: sectionController,
-                        keyboardType: TextInputType.number,
+                        keyboardType: TextInputType.text,
                         onSaved: (value) {
                           sectionController.text = value!;
                         },
@@ -102,7 +163,20 @@ class _UpdateStuInfoState extends State<UpdateStuInfo> {
                             EdgeInsets.symmetric(horizontal: 1, vertical: 30),
                         child: MaterialButton(
                           textColor: Colors.white,
-                          onPressed: () async {},
+                          onPressed: () async {
+                            Fluttertoast.showToast(msg: "Sign Up Successful");
+
+                            postDetailsToFirestore(
+                                widget.userName,
+                                widget.id,
+                                widget.email,
+                                widget.pass,
+                                widget.phone,
+                                widget.stoppage,
+                                batchController.text,
+                                sectionController.text,
+                                selectedDept!);
+                          },
                           padding: const EdgeInsets.all(0),
                           child: Deco('SAVE'),
                         ),
@@ -116,5 +190,31 @@ class _UpdateStuInfoState extends State<UpdateStuInfo> {
         ),
       ),
     );
+  }
+
+  postDetailsToFirestore(
+      String userName,
+      String id,
+      String email,
+      String pass,
+      String phone,
+      String stoppage,
+      String batch,
+      String section,
+      String dept) async {
+    AddStudent(
+      userName,
+      nameController.text,
+      id,
+      email,
+      phone,
+      stoppage,
+      batch,
+      section,
+      dept,
+    ).addStudent();
+
+    Navigator.of(context)
+        .pushReplacement(MaterialPageRoute(builder: (context) => TabScreen()));
   }
 }

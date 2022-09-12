@@ -1,9 +1,16 @@
+import 'dart:math';
+
+import 'package:consumer/databaseServices/addRequest.dart';
 import 'package:consumer/screens/initscreens/login.dart';
-import 'package:consumer/screens/initscreens/signup.dart';
+import 'package:consumer/screens/tabs/busSchedule.dart';
+import 'package:consumer/screens/tabs/request.dart';
 import 'package:consumer/screens/tabs/tabscreen.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -13,12 +20,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const TabScreen(),
+      debugShowCheckedModeBanner: false,
+      home: Login(),
     );
   }
 }

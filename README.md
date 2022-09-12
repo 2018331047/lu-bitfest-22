@@ -58,30 +58,30 @@ demand for transit for the maximum number of consumers.
         - [ ] An official/staff can log in to their portal by **any** of the following:
             - [ ] Combination of username & password
             - [ ] Mobile number with OTP verification
-        - [ ] Update Bus inventory with the following information **[Mandatory feature | 5 points]**
-            - [ ] License number
-            - [ ] Codename (ie: to uniquely identify)
-            - [ ] Capacity
-            - [ ] Driver info.
-                - [ ] Full Name
-                - [ ] Contact Number
-            - [ ] Is Active (ie: a bus could be in maintenance)
-        - [ ] Create/Update routes with the following information **[Mandatory | 5 points]**
-            - [ ] Route number
-            - [ ] Start location
-                - [ ] Label
-                - [ ] Latitude & Longitude
-            - [ ] Start time
-        - [ ] Create/Update stoppages with the following information **[Nice to have | 2 points]**
+        - [x] Update Bus inventory with the following information **[Mandatory feature | 5 points]**
+            - [x] License number
+            - [x] Codename (ie: to uniquely identify)
+            - [x] Capacity
+            - [x] Driver info.
+                - [x] Full Name
+                - [x] Contact Number
+            - [x] Is Active (ie: a bus could be in maintenance)
+        - [x] Create/Update routes with the following information **[Mandatory | 5 points]**
+            - [x] Route number
+            - [x] Start location
+                - [x] Label
+                - [x] Latitude & Longitude
+            - [x] Start time
+        - [x] Create/Update stoppages with the following information **[Nice to have | 2 points]**
             - [ ] Route number
             - [ ] Label
             - [ ] Latitude & Longitude
-        - [ ] Input the transport demands manually for a specific route & timeslot for the following
-            - [ ] groups **[Mandatory feature | 6 points]**
-            - [ ] Students
-            - [ ] Teachers
-            - [ ] Staff or officials
-            - [ ] Others (ie: in case of any events)
+        - [x] Input the transport demands manually for a specific route & timeslot for the following
+            - [x] groups **[Mandatory feature | 6 points]**
+            - [x] Students
+            - [x] Teachers
+            - [x] Staff or officials
+            - [x] Others (ie: in case of any events)
         - [ ] Automated transport demand calculation **[Nice to have | 10 points]**
             - [ ] Upload and store schedules (ie: class routine, exam routine)
             - [x] [A sample routine can be downloaded from this link]
@@ -121,7 +121,7 @@ demand for transit for the maximum number of consumers.
     - [ ] Automated seat allocation **[Nice to have | 5 points]**
         - [ ] For students, teachers, and staff a request will be applied automatically according to their
           routine/schedule
-        - [x] [A sample routine can be downloaded from this link]
+        - [ ] [A sample routine can be downloaded from this link]
             - [ ] [Class Routine](https://docs.google.com/spreadsheets/d/1kGY1XLjjdDOeFdTLzxgmQYZtLyKaBOshsJ_6pq0TrwU/edit#gid=712672084)
             - [ ] [Exam Routine](https://docs.google.com/spreadsheets/d/1_E9bvZpGL41k3m40PBvWd9l3NCgR0RQn/edit#gid=329530890)
     - [ ] Ability to view the location of a bus with estimated arrival time **[Nice to have | 15 points]**
